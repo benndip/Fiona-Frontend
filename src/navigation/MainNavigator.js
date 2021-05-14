@@ -1,21 +1,23 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 
-import { Splash, Onboarding } from '../screens';
+import {Splash, Onboarding, Signup, Login, Home} from '../screens';
 
 const stack = createStackNavigator();
 
 const MainNavigator = () => {
-    return (
-        <stack.Navigator
-            initialRouteName='Splash'
-            detachInactiveScreens
-            screenOptions={{ headerShown: false }}
-        >
-            <stack.Screen name="Splash" component={Splash} />
-            <stack.Screen name="Onboarding" component={Onboarding} />
-        </stack.Navigator>
-    );
+  return (
+    <stack.Navigator
+      initialRouteName="Splash"
+      detachInactiveScreens
+      screenOptions={{headerShown: false}}>
+      <stack.Screen name="Splash" component={Splash} />
+      <stack.Screen name="Onboarding" component={Onboarding} />
+      <stack.Screen name="Signup" component={Signup} />
+      <stack.Screen name="Login" component={Login} />
+      <stack.Screen name="Home" component={Home} />
+    </stack.Navigator>
+  );
 };
 
-export default MainNavigator
+export default MainNavigator;
