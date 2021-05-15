@@ -1,14 +1,21 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, ActivityIndicator} from 'react-native';
 import {WebView} from 'react-native-webview';
 
 import styles from './Home.style';
 
+const Load = () => {
+  return <ActivityIndicator color="grey" size="large" />;
+};
+
 const Home = () => {
   return (
-    <View style={styles.container}>
-      <WebView source={{uri: 'https://easycal.io/#/?onboard=true'}} />
-    </View>
+    <WebView
+      // styles={{width: '100%'}}
+      source={{uri: '192.168.0.101:3000'}}
+      renderLoading={Load}
+      startInLoadingState={true}
+    />
   );
 };
 

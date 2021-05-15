@@ -75,112 +75,108 @@ const Signup = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#009387" barStyle="light-content" />
-      <View style={styles.header}>
-        <Text style={styles.text_header}>Register Now!</Text>
-      </View>
-      <ScrollView>
-        <KeyboardAvoidingView
-          behavior="position"
-          keyboardVerticalOffset={keyboardVerticalOffset}
-          style={styles.footer}>
-          <Animatable.View animation="fadeInUpBig">
-            <Text style={styles.text_footer}>Name</Text>
-            <View style={styles.action}>
-              <Ionicons name="person-outline" color="#05375a" size={20} />
-              <TextInput
-                placeholder="Your Name"
-                style={styles.textInput}
-                autoCapitalize="none"
-                onChangeText={value => textInputChange(value)}
-              />
-            </View>
+      <ScrollView contentContainerStyle={{height: '100%'}}>
+        <StatusBar backgroundColor="#009387" barStyle="light-content" />
+        <View style={styles.header}>
+          <Text style={styles.text_header}>Register Now!</Text>
+        </View>
 
-            <Text style={[styles.text_footer, {marginTop: 10}]}>Email</Text>
-            <View style={styles.action}>
-              <FontAwesome name="user-o" color="#05375a" size={20} />
-              <TextInput
-                placeholder="Your Email"
-                style={styles.textInput}
-                autoCapitalize="none"
-                onChangeText={value => textInputChange(value)}
-              />
-              {data.check_textInputChange ? (
-                <Animatable.View animation="bounceIn">
-                  <Feather name="check-circle" color="green" size={20} />
-                </Animatable.View>
-              ) : null}
-            </View>
+        <Animatable.View animation="fadeInUpBig" style={styles.footer}>
+          <Text style={styles.text_footer}>Name</Text>
+          <View style={styles.action}>
+            <Ionicons name="person-outline" color="#05375a" size={20} />
+            <TextInput
+              placeholder="Your Name"
+              style={styles.textInput}
+              autoCapitalize="none"
+              onChangeText={value => textInputChange(value)}
+            />
+          </View>
 
-            <Text style={[styles.text_footer, {marginTop: 10}]}>Contact</Text>
-            <View style={styles.action}>
-              <AntDesign name="contacts" color="#05375a" size={20} />
-              <TextInput
-                placeholder="phone"
-                style={styles.textInput}
-                autoCapitalize="none"
-                onChangeText={value => textInputChange(value)}
-              />
-            </View>
+          <Text style={[styles.text_footer, {marginTop: 10}]}>Email</Text>
+          <View style={styles.action}>
+            <FontAwesome name="user-o" color="#05375a" size={20} />
+            <TextInput
+              placeholder="Your Email"
+              style={styles.textInput}
+              autoCapitalize="none"
+              onChangeText={value => textInputChange(value)}
+            />
+            {data.check_textInputChange ? (
+              <Animatable.View animation="bounceIn">
+                <Feather name="check-circle" color="green" size={20} />
+              </Animatable.View>
+            ) : null}
+          </View>
 
-            <Text style={[styles.text_footer, {marginTop: 10}]}>Password</Text>
-            <View style={styles.action}>
-              <Feather name="lock" color="#05375a" size={20} />
-              <TextInput
-                placeholder="Your Password"
-                style={styles.textInput}
-                autoCapitalize="none"
-                secureTextEntry={data.secureTextEntry ? true : false}
-                onChangeText={value => handlePasswordChange(value)}
-              />
-              <TouchableOpacity onPress={updateSecureTextEntry}>
-                {data.secureTextEntry ? (
-                  <Feather name="eye-off" color="grey" size={15} />
-                ) : (
-                  <Feather name="eye" color="grey" size={15} />
-                )}
-              </TouchableOpacity>
-            </View>
+          <Text style={[styles.text_footer, {marginTop: 10}]}>Contact</Text>
+          <View style={styles.action}>
+            <AntDesign name="contacts" color="#05375a" size={20} />
+            <TextInput
+              placeholder="phone"
+              style={styles.textInput}
+              autoCapitalize="none"
+              onChangeText={value => textInputChange(value)}
+            />
+          </View>
 
-            <Text style={[styles.text_footer, {marginTop: 10}]}>
-              Confirm Password
-            </Text>
-            <View style={styles.action}>
-              <Feather name="lock" color="#05375a" size={20} />
-              <TextInput
-                placeholder="Confirm Password"
-                style={styles.textInput}
-                autoCapitalize="none"
-                secureTextEntry={data.confirm_secureTextEntry ? true : false}
-                onChangeText={value => handleConfirmPasswordChange(value)}
-              />
-              <TouchableOpacity onPress={UpdateConfirmSecureTextEntry}>
-                {data.secureTextEntry ? (
-                  <Feather name="eye-off" color="grey" size={15} />
-                ) : (
-                  <Feather name="eye" color="grey" size={15} />
-                )}
-              </TouchableOpacity>
-            </View>
+          <Text style={[styles.text_footer, {marginTop: 10}]}>Password</Text>
+          <View style={styles.action}>
+            <Feather name="lock" color="#05375a" size={20} />
+            <TextInput
+              placeholder="Your Password"
+              style={styles.textInput}
+              autoCapitalize="none"
+              secureTextEntry={data.secureTextEntry ? true : false}
+              onChangeText={value => handlePasswordChange(value)}
+            />
+            <TouchableOpacity onPress={updateSecureTextEntry}>
+              {data.secureTextEntry ? (
+                <Feather name="eye-off" color="grey" size={15} />
+              ) : (
+                <Feather name="eye" color="grey" size={15} />
+              )}
+            </TouchableOpacity>
+          </View>
 
-            <View style={styles.button}>
-              <LinearGradient
-                colors={['#08d4c4', '#01ab9d']}
-                style={styles.signIn}>
-                <Text style={[styles.textSign, {color: 'white'}]}>Sign Up</Text>
-              </LinearGradient>
+          <Text style={[styles.text_footer, {marginTop: 10}]}>
+            Confirm Password
+          </Text>
+          <View style={styles.action}>
+            <Feather name="lock" color="#05375a" size={20} />
+            <TextInput
+              placeholder="Confirm Password"
+              style={styles.textInput}
+              autoCapitalize="none"
+              secureTextEntry={data.confirm_secureTextEntry ? true : false}
+              onChangeText={value => handleConfirmPasswordChange(value)}
+            />
+            <TouchableOpacity onPress={UpdateConfirmSecureTextEntry}>
+              {data.secureTextEntry ? (
+                <Feather name="eye-off" color="grey" size={15} />
+              ) : (
+                <Feather name="eye" color="grey" size={15} />
+              )}
+            </TouchableOpacity>
+          </View>
 
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={[
-                  styles.signIn,
-                  {borderColor: '#009387', borderWidth: 1, marginTop: 15},
-                ]}>
-                <Text style={[styles.textSign, {color: '#009387'}]}>Login</Text>
-              </TouchableOpacity>
-            </View>
-          </Animatable.View>
-        </KeyboardAvoidingView>
+          <View style={styles.button}>
+            <LinearGradient
+              colors={['#08d4c4', '#01ab9d']}
+              style={styles.signIn}>
+              <Text style={[styles.textSign, {color: 'white'}]}>Sign Up</Text>
+            </LinearGradient>
+
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={[
+                styles.signIn,
+                {borderColor: '#009387', borderWidth: 1, marginTop: 15},
+              ]}>
+              <Text style={[styles.textSign, {color: '#009387'}]}>Login</Text>
+            </TouchableOpacity>
+          </View>
+        </Animatable.View>
       </ScrollView>
     </View>
   );
@@ -200,7 +196,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   footer: {
-    flex: 5,
+    flex: 4,
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
