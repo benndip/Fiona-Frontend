@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Platform,
   StyleSheet,
@@ -10,6 +10,8 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   ScrollView,
+  ActivityIndicator,
+  Alert
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
@@ -18,20 +20,24 @@ import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-const Signup = ({navigation}) => {
+const Signup = ({ navigation }) => {
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0;
 
   const [data, setData] = useState({
+    userName: '',
     email: '',
     password: '',
-    confirm_password: '',
+    phone: '',
+    password_confirmation: '',
     check_textInputChange: false,
     secureTextEntry: true,
     confirm_secureTextEntry: true,
   });
 
+  const [loading, setLoading] = useState(false)
+
   const textInputChange = value => {
-    if (value.length !== 0) {
+    if (value.length !== 0 && _validateEmail(value)) {
       setData({
         ...data,
         email: value,
@@ -46,18 +52,68 @@ const Signup = ({navigation}) => {
     }
   };
 
+  const handleName = value => {
+    if (value.length !== 0) {
+      setData({
+        ...data,
+        userName: value,
+        check_textInputChange: false,
+      });
+    } else {
+      setData({
+        ...data,
+        userName: value,
+        check_textInputChange: false,
+      });
+    }
+  }
+
+  const handlePhone = (value) => {
+    if (value.length !== 0) {
+      setData({
+        ...data,
+        phone: value,
+        check_textInputChange: true,
+      });
+    } else {
+      setData({
+        ...data,
+        phone: value,
+        check_textInputChange: false,
+      });
+    }
+  }
+
   const handlePasswordChange = value => {
-    setData({
-      ...setData,
-      password: value,
-    });
+    if (value.length !== 0) {
+      setData({
+        ...data,
+        password: value,
+        check_textInputChange: false,
+      });
+    } else {
+      setData({
+        ...data,
+        password: value,
+        check_textInputChange: false,
+      });
+    }
   };
 
   const handleConfirmPasswordChange = value => {
-    setData({
-      ...setData,
-      confirm_password: value,
-    });
+    if (value.length !== 0) {
+      setData({
+        ...data,
+        password_confirmation: value,
+        check_textInputChange: false,
+      });
+    } else {
+      setData({
+        ...data,
+        password_confirmation: value,
+        check_textInputChange: false,
+      });
+    }
   };
 
   const updateSecureTextEntry = () => {
@@ -73,9 +129,60 @@ const Signup = ({navigation}) => {
     });
   };
 
+  const handleSignUp = () => {
+    setLoading(true)
+    let userData = {
+      userName: data.userName,
+      email: data.email,
+      password: data.password,
+      password_confirmation: data.password_confirmation,
+      phone: data.phone
+    }
+    console.log(JSON.stringify(userData))
+    fetch('http://192.168.0.109:8000/api/auth/register', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(userData)
+    }).then((response) => {
+      const statusCode = response.status;
+      const responseJson = response.json();
+      return Promise.all([statusCode, responseJson]);
+    })
+      .then((res) => {
+        const statusCode = res[0];
+        const responseJson = res[1];
+        if (statusCode == 200) {
+          storage.save({
+            key: 'USER',
+            data: responseJson.user,
+            expires: 1000 * 3600 * 24 * 365,
+          });
+          Alert.alert(
+            `🌟Register Successful🌟`,
+            ` You can now login🙌`,
+            [
+              { text: `login`, onPress: () => navigation.navigate('Login') },
+            ],
+            { cancelable: false },
+          )
+        } else if (statusCode == 422) {
+          Alert.alert(`Invalid parameters`, _gen422Errors(responseJson));
+        } else {
+          Alert.alert('Please check your internet connection and try again.');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(false)
+      }).finally(() => setLoading(false));
+  }
+
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={{height: '100%'}}>
+      <ScrollView >
         <StatusBar backgroundColor="#009387" barStyle="light-content" />
         <View style={styles.header}>
           <Text style={styles.text_header}>Register Now!</Text>
@@ -89,11 +196,12 @@ const Signup = ({navigation}) => {
               placeholder="Your Name"
               style={styles.textInput}
               autoCapitalize="none"
-              onChangeText={value => textInputChange(value)}
+              onChangeText={value => handleName(value)}
+              value={data.userName}
             />
           </View>
 
-          <Text style={[styles.text_footer, {marginTop: 10}]}>Email</Text>
+          <Text style={[styles.text_footer, { marginTop: 10 }]}>Email</Text>
           <View style={styles.action}>
             <FontAwesome name="user-o" color="#05375a" size={20} />
             <TextInput
@@ -101,26 +209,34 @@ const Signup = ({navigation}) => {
               style={styles.textInput}
               autoCapitalize="none"
               onChangeText={value => textInputChange(value)}
+              value={(data.email)}
             />
             {data.check_textInputChange ? (
               <Animatable.View animation="bounceIn">
                 <Feather name="check-circle" color="green" size={20} />
               </Animatable.View>
-            ) : null}
+            ) :
+              (!data.check_textInputChange && data.email.length > 0) ? (
+                <Animatable.View animation="bounceIn">
+                  <AntDesign name="closecircleo" color="red" size={20} />
+                </Animatable.View>
+              ) : null
+            }
           </View>
 
-          <Text style={[styles.text_footer, {marginTop: 10}]}>Contact</Text>
+          <Text style={[styles.text_footer, { marginTop: 10 }]}>Contact</Text>
           <View style={styles.action}>
             <AntDesign name="contacts" color="#05375a" size={20} />
             <TextInput
               placeholder="phone"
               style={styles.textInput}
               autoCapitalize="none"
-              onChangeText={value => textInputChange(value)}
+              onChangeText={value => handlePhone(value)}
+              value={data.phone}
             />
           </View>
 
-          <Text style={[styles.text_footer, {marginTop: 10}]}>Password</Text>
+          <Text style={[styles.text_footer, { marginTop: 10 }]}>Password</Text>
           <View style={styles.action}>
             <Feather name="lock" color="#05375a" size={20} />
             <TextInput
@@ -129,6 +245,7 @@ const Signup = ({navigation}) => {
               autoCapitalize="none"
               secureTextEntry={data.secureTextEntry ? true : false}
               onChangeText={value => handlePasswordChange(value)}
+              value={data.password}
             />
             <TouchableOpacity onPress={updateSecureTextEntry}>
               {data.secureTextEntry ? (
@@ -139,7 +256,7 @@ const Signup = ({navigation}) => {
             </TouchableOpacity>
           </View>
 
-          <Text style={[styles.text_footer, {marginTop: 10}]}>
+          <Text style={[styles.text_footer, { marginTop: 10 }]}>
             Confirm Password
           </Text>
           <View style={styles.action}>
@@ -150,6 +267,7 @@ const Signup = ({navigation}) => {
               autoCapitalize="none"
               secureTextEntry={data.confirm_secureTextEntry ? true : false}
               onChangeText={value => handleConfirmPasswordChange(value)}
+              value={data.password_confirmation}
             />
             <TouchableOpacity onPress={UpdateConfirmSecureTextEntry}>
               {data.secureTextEntry ? (
@@ -161,19 +279,30 @@ const Signup = ({navigation}) => {
           </View>
 
           <View style={styles.button}>
-            <LinearGradient
-              colors={['#08d4c4', '#01ab9d']}
-              style={styles.signIn}>
-              <Text style={[styles.textSign, {color: 'white'}]}>Sign Up</Text>
-            </LinearGradient>
+            {
+              !loading
+                ?
+                <TouchableOpacity
+                  style={styles.signIn}
+                  onPress={handleSignUp}
+                >
+                  <LinearGradient
+                    colors={['#08d4c4', '#01ab9d']}
+                    style={styles.signIn}>
+                    <Text style={[styles.textSign, { color: 'white' }]}>Sign Up</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+                :
+                <ActivityIndicator color='red' size='large' />
+            }
 
             <TouchableOpacity
               onPress={() => navigation.goBack()}
               style={[
                 styles.signIn,
-                {borderColor: '#009387', borderWidth: 1, marginTop: 15},
+                { borderColor: '#009387', borderWidth: 1, marginTop: 15 },
               ]}>
-              <Text style={[styles.textSign, {color: '#009387'}]}>Login</Text>
+              <Text style={[styles.textSign, { color: '#009387' }]}>Login</Text>
             </TouchableOpacity>
           </View>
         </Animatable.View>

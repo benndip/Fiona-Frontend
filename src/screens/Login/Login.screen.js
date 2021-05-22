@@ -55,10 +55,49 @@ const Login = ({navigation}) => {
       secureTextEntry: !data.secureTextEntry,
     });
   };
-
-  const OpenWeb = () => {
-    return <WebView source={{uri: 'https://google.com'}} />;
-  };
+  
+  const handleLogin = () => {
+    setLoading(true)
+    let userData = {
+      email: data.email,
+      password: data.password,
+    }
+    console.log(JSON.stringify(userData))
+    fetch('http://192.168.0.109:8000/api/auth/login', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(userData)
+    }).then((response) => {
+      const statusCode = response.status;
+      const responseJson = response.json();
+      return Promise.all([statusCode, responseJson]);
+    })
+      .then((res) => {
+        const statusCode = res[0];
+        const responseJson = res[1];
+        if (statusCode == 200) {
+          Alert.alert(
+            `🌟Login Successful🌟`,
+            ` Welcome to NutrimentFact.. where you track your growth🙌`,
+            [
+              { text: `Get Home`, onPress: () => navigation.navigate('Home') },
+            ],
+            { cancelable: false },
+          )
+        } else if (statusCode == 422) {
+          Alert.alert(`Invalid parameters`, _gen422Errors(responseJson));
+        } else {
+          Alert.alert('Please check your internet connection and try again.');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(false)
+      }).finally(() => setLoading(false));
+  } 
 
   return (
     <View style={styles.container}>

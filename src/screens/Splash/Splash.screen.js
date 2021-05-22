@@ -18,14 +18,25 @@ const Splash = ({ navigation }) => {
         }).start()
     }
 
+    const checkRouteToGo = async () => {
+        try {
+            let notFirstTime = await storage.load('NOTFIRSTTIME');
+            if (notFirstTime) {
+                navigation.navigate("Home")
+            }
+        } catch (error) {
+            storage.save({
+                key: 'NOTFIRSTTIME',
+                data: true,
+                expires: 1000 * 3600 * 24 * 365,
+              });
+            navigation.navigate("Onboarding")
+        }
+    }
+
     useEffect(() => {
         animateOpacity()
-        const timeout = setTimeout(() => {
-            navigation.navigate("Onboarding")
-        }, 2000);
-        return () => {
-            clearTimeout(timeout)
-        }
+        checkRouteToGo()
     }, [])
 
     return (
