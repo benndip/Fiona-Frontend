@@ -101,7 +101,7 @@ const Login = ({ navigation }) => {
             `🌟Login Successful🌟`,
             ` Welcome to NutrimentFact.. where you track your growth🙌`,
             [
-              { text: `Get Home`, onPress: () => navigation.navigate('Home') },
+              { text: `Get Home`, onPress: () => navigation.navigate('DrawerNaigation') },
             ],
             { cancelable: false },
           )

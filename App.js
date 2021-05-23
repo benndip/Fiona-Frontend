@@ -29,7 +29,7 @@ const App = () => {
   const routeNameRef = useRef();
   const navigationRef = useRef();
   const backAction = () => {
-    if (navigationRef.current.getCurrentRoute().name === 'Home') {
+    if (navigationRef.current.getCurrentRoute().name === 'DrawerNaigation') {
       ToastAndroid.show(
         'click again to exit NutrimentFact',
         ToastAndroid.SHORT,

@@ -27,7 +27,7 @@ const Splash = ({ navigation }) => {
                 try {
                     let token = await storage.load({ key: 'TOKEN' })
                     if (token) {
-                        navigation.navigate("Home")
+                        navigation.navigate("DrawerNaigation")
                     }
                 } catch (error) {
                     navigation.navigate("Signup")
