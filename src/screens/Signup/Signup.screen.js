@@ -182,13 +182,13 @@ const Signup = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="green" barStyle="light-content" />
       <ScrollView >
-        <StatusBar backgroundColor="#009387" barStyle="light-content" />
         <View style={styles.header}>
-          <Text style={styles.text_header}>Register Now!</Text>
+          <Text style={styles.text_header}>Register Now !</Text>
         </View>
 
-        <Animatable.View animation="fadeInUpBig" style={styles.footer}>
+        <Animatable.View useNativeDriver={true} animation="fadeInUpBig" style={styles.footer}>
           <Text style={styles.text_footer}>Name</Text>
           <View style={styles.action}>
             <Ionicons name="person-outline" color="#05375a" size={20} />
@@ -293,11 +293,11 @@ const Signup = ({ navigation }) => {
                   </LinearGradient>
                 </TouchableOpacity>
                 :
-                <ActivityIndicator color='red' size='large' />
+                <ActivityIndicator color='#009387' size='large' />
             }
 
             <TouchableOpacity
-              onPress={() => navigation.goBack()}
+              onPress={() => navigation.navigate('Login')}
               style={[
                 styles.signIn,
                 { borderColor: '#009387', borderWidth: 1, marginTop: 15 },
@@ -337,6 +337,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 30,
+    marginTop: 10
   },
   text_footer: {
     color: '#05375a',
@@ -357,7 +358,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 10,
   },
   signIn: {
     width: '100%',

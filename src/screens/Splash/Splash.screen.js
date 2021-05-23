@@ -15,28 +15,36 @@ const Splash = ({ navigation }) => {
             toValue: 1,
             duration: 1600,
             useNativeDriver: true
-        }).start()
+        }).start(({ finished }) => {
+            checkRouteToGo()
+        })
     }
 
     const checkRouteToGo = async () => {
         try {
-            let notFirstTime = await storage.load('NOTFIRSTTIME');
+            let notFirstTime = await storage.load({ key: 'NOTFIRSTTIME' });
             if (notFirstTime) {
-                navigation.navigate("Home")
+                try {
+                    let token = await storage.load({ key: 'TOKEN' })
+                    if (token) {
+                        navigation.navigate("Home")
+                    }
+                } catch (error) {
+                    navigation.navigate("Signup")
+                }
             }
         } catch (error) {
             storage.save({
                 key: 'NOTFIRSTTIME',
                 data: true,
                 expires: 1000 * 3600 * 24 * 365,
-              });
+            });
             navigation.navigate("Onboarding")
         }
     }
 
     useEffect(() => {
         animateOpacity()
-        checkRouteToGo()
     }, [])
 
     return (

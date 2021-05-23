@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Platform,
   StyleSheet,
@@ -8,8 +8,10 @@ import {
   Dimensions,
   TextInput,
   StatusBar,
+  Alert,
+  ActivityIndicator
 } from 'react-native';
-import {WebView} from 'react-native-webview';
+import { WebView } from 'react-native-webview';
 
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
@@ -18,7 +20,7 @@ import Feather from 'react-native-vector-icons/Feather';
 
 import styles from './Login.style';
 
-const Login = ({navigation}) => {
+const Login = ({ navigation }) => {
   const [data, setData] = useState({
     email: '',
     password: '',
@@ -26,8 +28,10 @@ const Login = ({navigation}) => {
     secureTextEntry: true,
   });
 
+  const [loading, setLoading] = useState(false)
+
   const textInputChange = value => {
-    if (value.length !== 0) {
+    if (value.length !== 0 && _validateEmail(value)) {
       setData({
         ...data,
         email: value,
@@ -43,10 +47,19 @@ const Login = ({navigation}) => {
   };
 
   const handlePasswordChange = value => {
-    setData({
-      ...setData,
-      password: value,
-    });
+    if (value.length !== 0) {
+      setData({
+        ...data,
+        password: value,
+        check_textInputChange: false,
+      });
+    } else {
+      setData({
+        ...data,
+        password: value,
+        check_textInputChange: false,
+      });
+    }
   };
 
   const updateSecureTextEntry = () => {
@@ -55,7 +68,7 @@ const Login = ({navigation}) => {
       secureTextEntry: !data.secureTextEntry,
     });
   };
-  
+
   const handleLogin = () => {
     setLoading(true)
     let userData = {
@@ -79,6 +92,11 @@ const Login = ({navigation}) => {
         const statusCode = res[0];
         const responseJson = res[1];
         if (statusCode == 200) {
+          storage.save({
+            key: 'TOKEN',
+            data: responseJson.access_token,
+            expires: 1000 * 3600 * 24 * 365,
+          });
           Alert.alert(
             `🌟Login Successful🌟`,
             ` Welcome to NutrimentFact.. where you track your growth🙌`,
@@ -89,7 +107,10 @@ const Login = ({navigation}) => {
           )
         } else if (statusCode == 422) {
           Alert.alert(`Invalid parameters`, _gen422Errors(responseJson));
-        } else {
+        } else if (statusCode == 401) {
+          Alert.alert(`Error`, responseJson.error);
+        } 
+         else {
           Alert.alert('Please check your internet connection and try again.');
         }
       })
@@ -97,7 +118,7 @@ const Login = ({navigation}) => {
         console.error(error);
         setLoading(false)
       }).finally(() => setLoading(false));
-  } 
+  }
 
   return (
     <View style={styles.container}>
@@ -105,7 +126,7 @@ const Login = ({navigation}) => {
       <View style={styles.header}>
         <Text style={styles.text_header}>Welcome!</Text>
       </View>
-      <Animatable.View animation="fadeInUpBig" style={styles.footer}>
+      <Animatable.View useNativeDriver={true} animation="fadeInUpBig" style={styles.footer}>
         <Text style={styles.text_footer}>Email</Text>
         <View style={styles.action}>
           <FontAwesome name="user-o" color="#05375a" size={20} />
@@ -114,6 +135,7 @@ const Login = ({navigation}) => {
             style={styles.textInput}
             autoCapitalize="none"
             onChangeText={value => textInputChange(value)}
+            value={data.email}
           />
           {data.check_textInputChange ? (
             <Animatable.View animation="bounceIn">
@@ -121,7 +143,7 @@ const Login = ({navigation}) => {
             </Animatable.View>
           ) : null}
         </View>
-        <Text style={[styles.text_footer, {marginTop: 35}]}>Password</Text>
+        <Text style={[styles.text_footer, { marginTop: 35 }]}>Password</Text>
         <View style={styles.action}>
           <Feather name="lock" color="#05375a" size={20} />
           <TextInput
@@ -130,6 +152,7 @@ const Login = ({navigation}) => {
             autoCapitalize="none"
             secureTextEntry={data.secureTextEntry ? true : false}
             onChangeText={value => handlePasswordChange(value)}
+            value={data.password}
           />
           <TouchableOpacity onPress={updateSecureTextEntry}>
             {data.secureTextEntry ? (
@@ -141,23 +164,30 @@ const Login = ({navigation}) => {
         </View>
 
         <View style={styles.button}>
-          <TouchableOpacity
-            style={{width: '100%'}}
-            onPress={() => navigation.navigate('Home')}>
-            <LinearGradient
-              colors={['#08d4c4', '#01ab9d']}
-              style={[styles.signIn]}>
-              <Text style={[styles.textSign, {color: 'white'}]}>Login</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+          {
+            !loading
+              ?
+              <TouchableOpacity
+                style={{ width: '100%' }}
+                onPress={handleLogin}
+              >
+                <LinearGradient
+                  colors={['#08d4c4', '#01ab9d']}
+                  style={[styles.signIn]}>
+                  <Text style={[styles.textSign, { color: 'white' }]}>Login</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+              :
+              <ActivityIndicator color='#009387' size='large' />
+          }
 
           <TouchableOpacity
             onPress={() => navigation.navigate('Signup')}
             style={[
               styles.signIn,
-              {borderColor: '#009387', borderWidth: 1, marginTop: 15},
+              { borderColor: '#009387', borderWidth: 1, marginTop: 15 },
             ]}>
-            <Text style={[styles.textSign, {color: '#009387'}]}>Sign Up</Text>
+            <Text style={[styles.textSign, { color: '#009387' }]}>Sign Up</Text>
           </TouchableOpacity>
         </View>
       </Animatable.View>

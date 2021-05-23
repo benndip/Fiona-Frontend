@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
+import { ToastAndroid, BackHandler } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
-import {enableScreens} from 'react-native-screens'
+import { enableScreens } from 'react-native-screens'
 import Storage from 'react-native-storage';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -24,8 +25,38 @@ global._gen422Errors = errors => {
 }
 
 const App = () => {
+  let clicks = 0
+  const routeNameRef = useRef();
+  const navigationRef = useRef();
+  const backAction = () => {
+    if (navigationRef.current.getCurrentRoute().name === 'Home') {
+      ToastAndroid.show(
+        'click again to exit NutrimentFact',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER
+      )
+      if (clicks > 0) {
+        BackHandler.exitApp()
+      } else {
+        clicks++
+      }
+      setTimeout(() => {
+        clicks = 0
+      }, 1500);
+      return true
+    }
+    return false
+  }
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', backAction)
+  }, [])
+
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      ref={navigationRef}
+      onReady={() => routeNameRef.current = navigationRef.current.getCurrentRoute().name}
+    >
       <MainNavigator />
     </NavigationContainer>
   );
