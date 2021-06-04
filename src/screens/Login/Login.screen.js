@@ -76,7 +76,7 @@ const Login = ({ navigation }) => {
       password: data.password,
     }
     console.log(JSON.stringify(userData))
-    fetch('http://192.168.0.109:8000/api/auth/login', {
+    fetch('http://192.168.0.104:8000/api/auth/login', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

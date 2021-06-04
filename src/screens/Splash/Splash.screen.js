@@ -44,6 +44,10 @@ const Splash = ({ navigation }) => {
     }
 
     useEffect(() => {
+         storage.remove({
+                key: 'TOKEN',
+                
+            });
         animateOpacity()
     }, [])
 
@@ -51,7 +55,7 @@ const Splash = ({ navigation }) => {
         <View style={styles.container}>
             <StatusBar backgroundColor={theme.PRIMARY_COLOR} />
             <Animated.Image
-                source={require('../../../res/ecbc_logo.png')}
+                source={require('../../../res/BlipCo.png')}
                 style={[styles.logo, { opacity }]}
             />
             <Animated.Text style={[styles.txt, { opacity }]}>Nutriment Facts</Animated.Text>

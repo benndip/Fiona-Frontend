@@ -17,8 +17,10 @@ import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { Picker } from '@react-native-picker/picker';
 
 const Signup = ({ navigation }) => {
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0;
@@ -28,6 +30,9 @@ const Signup = ({ navigation }) => {
     email: '',
     password: '',
     phone: '',
+    age: 0,
+    weight: 0,
+    sex: '',
     password_confirmation: '',
     check_textInputChange: false,
     secureTextEntry: true,
@@ -84,6 +89,54 @@ const Signup = ({ navigation }) => {
     }
   }
 
+  const handleAge = (value) => {
+    if (value.length !== 0 && Number.isInteger(value)) {
+      setData({
+        ...data,
+        age: value,
+        check_textInputChange: true,
+      });
+    } else {
+      setData({
+        ...data,
+        age: value,
+        check_textInputChange: false,
+      });
+    }
+  }
+
+  const handleWeight = (value) => {
+    if (value.length !== 0) {
+      setData({
+        ...data,
+        weight: value,
+        check_textInputChange: true,
+      });
+    } else {
+      setData({
+        ...data,
+        weight: value,
+        check_textInputChange: false,
+      });
+    }
+  }
+
+  const handleSex = (value) => {
+    if (value.length !== 0) {
+      setData({
+        ...data,
+        sex: value,
+        check_textInputChange: true,
+      });
+    } else {
+      setData({
+        ...data,
+        sex: value,
+        check_textInputChange: false,
+      });
+    }
+  }
+
   const handlePasswordChange = value => {
     if (value.length !== 0) {
       setData({
@@ -132,14 +185,17 @@ const Signup = ({ navigation }) => {
   const handleSignUp = () => {
     setLoading(true)
     let userData = {
-      userName: data.userName,
+      name: data.userName,
       email: data.email,
+      age: data.age,
+      weight: data.weight,
+      sex: data.sex,
       password: data.password,
       password_confirmation: data.password_confirmation,
       phone: data.phone
     }
     console.log(JSON.stringify(userData))
-    fetch('http://192.168.0.109:8000/api/auth/register', {
+    fetch('http://192.168.0.104:8000/api/auth/register', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -182,7 +238,7 @@ const Signup = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="green" barStyle="light-content" />
+      <StatusBar backgroundColor="#01ab9d" barStyle="light-content" />
       <ScrollView >
         <View style={styles.header}>
           <Text style={styles.text_header}>Register Now !</Text>
@@ -235,6 +291,39 @@ const Signup = ({ navigation }) => {
               value={data.phone}
             />
           </View>
+
+          <Text style={{ marginTop: 10 }}>Age</Text>
+          <View style={styles.action}>
+            <AntDesign name="contacts" color="#05375a" size={20} />
+            <TextInput
+              placeholder="age"
+              style={styles.textInput}
+              autoCapitalize="none"
+              onChangeText={value => handleAge(value)}
+              value={data.age}
+            />
+          </View>
+
+          <Text style={{ marginTop: 10 }}>Weight</Text>
+          <View style={styles.action}>
+            <MaterialCommunityIcons name="weight-kilogram" color="#05375a" size={20} />
+            <TextInput
+              placeholder="weight"
+              style={styles.textInput}
+              autoCapitalize="none"
+              onChangeText={value => handleWeight(value)}
+              value={data.weight}
+            />
+          </View>
+
+          <Text style={{ marginTop: 10 }}>Sex</Text>
+          <Picker
+            selectedValue={data.sex}
+            onValueChange={(value, itemIndex) => handleSex(value)}
+          >
+            <Picker.Item label="male" value="male" />
+            <Picker.Item label="female" value="female" />
+          </Picker>
 
           <Text style={[styles.text_footer, { marginTop: 10 }]}>Password</Text>
           <View style={styles.action}>
@@ -307,7 +396,7 @@ const Signup = ({ navigation }) => {
           </View>
         </Animatable.View>
       </ScrollView>
-    </View>
+    </View >
   );
 };
 
@@ -345,7 +434,7 @@ const styles = StyleSheet.create({
   },
   action: {
     flexDirection: 'row',
-    marginTop: 10,
+    marginTop: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
     paddingBottom: 5,

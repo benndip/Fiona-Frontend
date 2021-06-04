@@ -59,19 +59,19 @@ const OnboardingScreen = ({navigation}) => {
         pages={[
           {
             backgroundColor: '#a6e4d0',
-            image: <Image source={require('../../../res/ecbc_logo.png')} />,
+            image: <Image source={require('../../../res/BlipCo.png')} />,
             title: 'Connect to the World',
             subtitle: 'A New Way To Connect With The World',
           },
           {
             backgroundColor: '#fdeb93',
-            image: <Image source={require('../../../res/ecbc_logo.png')} />,
+            image: <Image source={require('../../../res/BlipCo.png')} />,
             title: 'Share Your Favorites',
             subtitle: 'Share Your Thoughts With Similar Kind of People',
           },
           {
             backgroundColor: '#e9bcbe',
-            image: <Image source={require('../../../res/ecbc_logo.png')} />,
+            image: <Image source={require('../../../res/BlipCo.png')} />,
             title: 'Become The Star',
             subtitle: "Let The Spot Light Capture You",
           },

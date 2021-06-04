@@ -12,7 +12,7 @@ const Home = () => {
   return (
     <WebView
       // styles={{width: '100%'}}
-      source={{uri: '192.168.0.109:3000'}}
+      source={{uri: `https://nutriment-fact.herokuapp.com/`}}
       renderLoading={Load}
       startInLoadingState={true}
     />
