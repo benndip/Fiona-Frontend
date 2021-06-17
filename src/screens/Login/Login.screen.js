@@ -75,8 +75,8 @@ const Login = ({ navigation }) => {
       email: data.email,
       password: data.password,
     }
-    console.log(JSON.stringify(userData))
-    fetch('http://192.168.0.104:8000/api/auth/login', {
+    // console.log(JSON.stringify(userData))
+    fetch('https://mighty-bayou-23998.herokuapp.com/api/auth/login', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

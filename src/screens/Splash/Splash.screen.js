@@ -58,7 +58,7 @@ const Splash = ({ navigation }) => {
                 source={require('../../../res/BlipCo.png')}
                 style={[styles.logo, { opacity }]}
             />
-            <Animated.Text style={[styles.txt, { opacity }]}>Nutriment Facts</Animated.Text>
+            <Animated.Text style={[styles.txt, { opacity }]}>Nutriment Fact</Animated.Text>
         </View>
     )
 }

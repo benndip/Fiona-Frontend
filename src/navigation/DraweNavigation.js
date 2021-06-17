@@ -10,6 +10,7 @@ const DraweNavigation = () => {
     return (
         <Drawer.Navigator initialRouteName="Home">
             <Drawer.Screen name="Home" component={Home} />
+            {/* <Drawer.Screen name="Home" component={Home} /> */}
         </Drawer.Navigator>
     )
 }

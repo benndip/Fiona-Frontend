@@ -10,12 +10,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff'
   },
   logo: {
-    width: 150,
-    height: 150,
+    width: 350,
+    height: 350,
     marginBottom: 90
   },
   txt: {
-    color: '#ffffff',
+    color: 'indigo',
     fontWeight: 'bold',
     fontSize: 20
   }

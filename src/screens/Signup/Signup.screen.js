@@ -194,8 +194,10 @@ const Signup = ({ navigation }) => {
       password_confirmation: data.password_confirmation,
       phone: data.phone
     }
-    console.log(JSON.stringify(userData))
-    fetch('http://192.168.0.104:8000/api/auth/register', {
+
+    // console.log(JSON.stringify(userData))
+
+    fetch('https://mighty-bayou-23998.herokuapp.com/api/auth/register', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
